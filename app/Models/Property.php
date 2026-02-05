@@ -3,47 +3,28 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Property extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'category_id',
-        'name',
+        'title',
         'description',
         'price',
-        'beds',
-        'baths',
-        'area',
         'location',
-        'type',
-        'availability',
+        'status',
+        'is_approved',
+        'main_image'
     ];
 
-    /* =====================
-        RELATIONSHIPS
-    ====================== */
-
-    public function user()
+    public function agent()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function images()
-    {
-        return $this->hasMany(PropertyImage::class);
-    }
-
-    public function queries()
-    {
-        return $this->hasMany(Query::class);
     }
 }

@@ -4,47 +4,43 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use Notifiable;
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'photo',
         'role',
-        'theme',
+        'phone',
+        'profile_image',
+        'is_active'
     ];
 
     protected $hidden = [
-        'password',
+        'password'
     ];
 
-    /* =====================
-        RELATIONSHIPS
-    ====================== */
+    /*
+    |--------------------------------------------------------------------------
+    | Role Helpers
+    |--------------------------------------------------------------------------
+    */
 
-    public function properties()
+    public function isAdmin()
     {
-        return $this->hasMany(Property::class);
+        return $this->role === 'admin';
     }
 
-    public function agentRequest()
+    public function isAgent()
     {
-        return $this->hasOne(AgentRequest::class);
+        return $this->role === 'agent';
     }
 
-    public function queries()
+    public function isUser()
     {
-        return $this->hasMany(Query::class);
-    }
-
-    public function feedback()
-    {
-        return $this->hasMany(Feedback::class);
+        return $this->role === 'user';
     }
 }
