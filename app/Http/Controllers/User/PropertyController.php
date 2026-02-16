@@ -12,11 +12,14 @@ class PropertyController extends Controller
     public function index(Request $request)
     {
         $query = Property::with('images', 'category', 'user')
-            ->where('availability', 'available');
+            ->where('availability', 'available')
+            ->where('is_approved', true);
 
         if ($request->filled('keyword')) {
-            $query->where('name', 'like', '%' . $request->keyword . '%')
+            $query->where(function($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->keyword . '%')
                   ->orWhere('location', 'like', '%' . $request->keyword . '%');
+            });
         }
 
         if ($request->filled('type')) {
@@ -29,8 +32,9 @@ class PropertyController extends Controller
         return view('user.properties.index', compact('properties', 'categories'));
     }
 
-    public function show(Property $property)
+    public function show($id)
     {
+        $property = Property::with(['images', 'user', 'category'])->findOrFail($id);
         $property->load('images', 'user', 'category');
 
         return view('user.properties.show', compact('property'));

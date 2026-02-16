@@ -26,7 +26,7 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
@@ -36,13 +36,13 @@ class PropertyController extends Controller
             'location' => 'required|string',
             'type' => 'required|in:buy,rent',
             'availability' => 'required|in:available,sold',
-            'images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $property = Property::create([
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
-            'name' => $request->name,
+            'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'beds' => $request->beds,
@@ -79,7 +79,7 @@ class PropertyController extends Controller
     public function update(Request $request, Property $property)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',

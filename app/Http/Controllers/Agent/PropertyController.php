@@ -30,23 +30,23 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
             'beds' => 'required|integer',
             'baths' => 'required|integer',
-            'area' => 'required|integer',
+            'area' => 'required|numeric',
             'location' => 'required|string',
             'type' => 'required|in:buy,rent',
             'availability' => 'required|in:available,sold',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $property = Property::create([
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
-            'name' => $request->name,
+            'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'beds' => $request->beds,
@@ -55,6 +55,7 @@ class PropertyController extends Controller
             'location' => $request->location,
             'type' => $request->type,
             'availability' => $request->availability,
+            'is_approved' => false, // Agents properties need admin approval
         ]);
 
         if ($request->hasFile('images')) {
@@ -69,7 +70,7 @@ class PropertyController extends Controller
         }
 
         return redirect()->route('agent.properties.index')
-            ->with('success', 'Property added successfully');
+            ->with('success', 'Property submitted and awaiting admin approval');
     }
 
     public function edit(Property $property)
@@ -87,13 +88,13 @@ class PropertyController extends Controller
         $this->authorizeProperty($property);
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
             'beds' => 'required|integer',
             'baths' => 'required|integer',
-            'area' => 'required|integer',
+            'area' => 'required|numeric',
             'location' => 'required|string',
             'type' => 'required|in:buy,rent',
             'availability' => 'required|in:available,sold',
@@ -102,7 +103,7 @@ class PropertyController extends Controller
         $property->update($request->all());
 
         return redirect()->route('agent.properties.index')
-            ->with('success', 'Property updated');
+            ->with('success', 'Property updated successfully');
     }
 
     public function destroy(Property $property)
@@ -112,7 +113,7 @@ class PropertyController extends Controller
         $property->delete();
 
         return redirect()->route('agent.properties.index')
-            ->with('success', 'Property deleted');
+            ->with('success', 'Property deleted successfully');
     }
 
     private function authorizeProperty(Property $property)

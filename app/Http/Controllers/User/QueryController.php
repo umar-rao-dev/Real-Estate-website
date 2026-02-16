@@ -10,11 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class QueryController extends Controller
 {
-    public function store(Request $request, Property $property)
+    public function store(Request $request)
     {
         $request->validate([
+            'property_id' => 'required|exists:properties,id',
             'message' => 'required|string',
         ]);
+
+        $property = Property::findOrFail($request->property_id);
 
         Query::create([
             'property_id' => $property->id,

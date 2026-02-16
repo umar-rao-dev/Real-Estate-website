@@ -1,36 +1,29 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PropertyApiController;
-use App\Http\Controllers\Api\QueryApiController;
-use App\Http\Controllers\Api\AnnouncementApiController;
+use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\QueryController;
+use App\Http\Controllers\Api\AnnouncementController;
 
-/*
-|--------------------------------------------------------------------------
-| Authentication
-|--------------------------------------------------------------------------
-*/
-
-// Register & login
+// PUBLIC ROUTES
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-// Sanctum-protected routes
+// PROTECTED ROUTES (requires Bearer token)
 Route::middleware('auth:sanctum')->group(function () {
-
     Route::post('logout', [AuthController::class, 'logout']);
 
     // Properties
-    Route::get('properties', [PropertyApiController::class, 'index']);
-    Route::get('properties/{id}', [PropertyApiController::class, 'show']);
-    Route::get('properties/search', [PropertyApiController::class, 'search']);
+    Route::get('properties', [PropertyController::class, 'index']);
+    Route::get('properties/{id}', [PropertyController::class, 'show']);
+    Route::get('properties/search', [PropertyController::class, 'search']);
 
-    // User → Queries
-    Route::post('queries', [QueryApiController::class, 'store']);
-    Route::get('queries', [QueryApiController::class, 'index']);
+    // Queries
+    Route::post('queries', [QueryController::class, 'store']);
+    Route::get('queries', [QueryController::class, 'index']);
 
     // Announcements
-    Route::get('announcements', [AnnouncementApiController::class, 'index']);
-    Route::get('announcements/{id}', [AnnouncementApiController::class, 'show']);
+    Route::get('announcements', [AnnouncementController::class, 'index']);
 });
