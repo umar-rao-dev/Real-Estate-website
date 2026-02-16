@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-primary-subtle py-5">
-    <div class="container py-4">
-        <h1 class="fw-bold mb-0">Browse Properties</h1>
-        <p class="text-muted">Discover the perfect space from over {{ $properties->total() }} results.</p>
+<div class="hero-section py-5">
+    <div class="container text-center py-4">
+        <h1 class="fw-bold mb-0 text-white">Browse Properties</h1>
+        <p class="lead text-white-50">Find your next home from our curated selection of properties.</p>
     </div>
 </div>
 
@@ -16,12 +16,12 @@
                 <h5 class="fw-bold mb-4">Search & Filters</h5>
                 <form action="{{ route('properties.index') }}" method="GET">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Keyword</label>
-                        <input type="text" name="keyword" class="form-control" placeholder="City, address..." value="{{ request('keyword') }}">
+                        <label class="form-label small fw-bold">Keyword</label>
+                        <input type="text" name="keyword" class="form-control" placeholder="City or name..." value="{{ request('keyword') }}">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Property Type</label>
+                        <label class="form-label small fw-bold">Type</label>
                         <select name="type" class="form-select">
                             <option value="">Any Type</option>
                             <option value="buy" {{ request('type') == 'buy' ? 'selected' : '' }}>For Sale</option>
@@ -29,22 +29,8 @@
                         </select>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Category</label>
-                        <div class="category-list" style="max-height: 200px; overflow-y: auto;">
-                            @foreach($categories as $cat)
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $cat->id }}" id="cat{{ $cat->id }}" {{ is_array(request('categories')) && in_array($cat->id, request('categories')) ? 'checked' : '' }}>
-                                    <label class="form-check-label small" for="cat{{ $cat->id }}">
-                                        {{ $cat->name }}
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
-                    <a href="{{ route('properties.index') }}" class="btn btn-link w-100 text-decoration-none mt-2 small">Reset All</a>
+                    <a href="{{ route('properties.index') }}" class="btn btn-link w-100 text-decoration-none mt-2 small">Reset</a>
                 </form>
             </div>
         </div>
@@ -54,37 +40,25 @@
             <div class="row g-4">
                 @forelse($properties as $property)
                 <div class="col-md-6">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
                         <div class="position-relative">
-                            @if($property->images->count() > 0)
-                                <img src="{{ asset('storage/' . $property->images->first()->image_path) }}" class="card-img-top" alt="{{ $property->title }}" style="height: 200px; object-fit: cover;">
-                            @else
-                                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Default" style="height: 200px; object-fit: cover;">
-                            @endif
-                            <div class="position-absolute top-0 end-0 m-3 px-3 py-1 bg-white bg-opacity-90 rounded-pill shadow-sm">
-                                <span class="fw-bold text-primary">${{ number_format($property->price) }}</span>
-                            </div>
-                            <div class="position-absolute bottom-0 start-0 m-3">
-                                <span class="badge {{ $property->type == 'buy' ? 'bg-primary' : 'bg-success' }} px-3 py-1 rounded-pill shadow">
-                                    {{ $property->type == 'buy' ? 'For Sale' : 'For Rent' }}
-                                </span>
-                            </div>
+                            @php
+                                $imageUrl = $property->images->count() > 0 
+                                    ? asset('storage/' . $property->images->first()->image_path) 
+                                    : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=80';
+                            @endphp
+                            <img src="{{ $imageUrl }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                            <span class="position-absolute top-0 end-0 m-3 badge bg-primary px-3 py-2 rounded-pill shadow">{{ ucfirst($property->type) }}</span>
                         </div>
                         <div class="card-body p-4 text-start">
-                            <small class="text-primary fw-bold text-uppercase mb-1 d-inline-block">{{ $property->category->name }}</small>
-                            <h5 class="card-title fw-bold mb-2"><a href="{{ route('properties.show', $property->id) }}" class="text-decoration-none text-dark">{{ $property->title }}</a></h5>
-                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt me-1"></i> {{ $property->location }}</p>
-                            
-                            <div class="d-flex justify-content-between border-top pt-3">
-                                <div class="text-muted small">
-                                    <i class="bi bi-door-open me-1"></i> {{ $property->beds }} Bds
-                                </div>
-                                <div class="text-muted small">
-                                    <i class="bi bi-droplet me-1"></i> {{ $property->baths }} Bths
-                                </div>
-                                <div class="text-muted small">
-                                    <i class="bi bi-bounding-box me-1"></i> {{ $property->area }} sqft
-                                </div>
+                            <div class="text-primary small fw-bold mb-1">{{ strtoupper($property->category->name) }}</div>
+                            <h5 class="fw-bold mb-2"><a href="{{ route('properties.show', $property->id) }}" class="text-decoration-none text-dark">{{ $property->name }}</a></h5>
+                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt"></i> {{ $property->location }}</p>
+                            <div class="h5 fw-bold text-primary mb-3">${{ number_format($property->price) }}</div>
+                            <div class="d-flex justify-content-between text-muted small border-top pt-3">
+                                <span><i class="bi bi-door-open"></i> {{ $property->beds }} Bds</span>
+                                <span><i class="bi bi-droplet"></i> {{ $property->baths }} Bths</span>
+                                <span><i class="bi bi-bounding-box"></i> {{ $property->area }} sqft</span>
                             </div>
                         </div>
                     </div>
@@ -98,11 +72,15 @@
                 @endforelse
             </div>
 
-            <!-- Pagination -->
             <div class="mt-5 d-flex justify-content-center">
                 {{ $properties->appends(request()->input())->links() }}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card-hover { transition: transform 0.3s ease; }
+    .card-hover:hover { transform: translateY(-10px); }
+</style>
 @endsection

@@ -13,7 +13,6 @@ class AgentMiddleware
         if (Auth::check() && (Auth::user()->role === 'agent' || Auth::user()->role === 'admin')) {
             return $next($request);
         }
-
-        abort(403, 'Unauthorized access.');
+        return redirect('/login');
     }
 }

@@ -30,7 +30,7 @@
                             <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=80" class="card-img-top" style="height: 200px; object-fit: cover;">
                         @endif
                         <div class="card-body">
-                            <h5 class="fw-bold"><a href="{{ route('properties.show', $property->id) }}" class="text-decoration-none text-dark">{{ $property->title }}</a></h5>
+                            <h5 class="fw-bold"><a href="{{ route('properties.show', $property->id) }}" class="text-decoration-none text-dark">{{ $property->name }}</a></h5>
                             <p class="text-muted small mb-0"><i class="bi bi-geo-alt"></i> {{ $property->location }}</p>
                             <div class="mt-3 d-flex justify-content-between">
                                 <span class="fw-bold text-primary">${{ number_format($property->price) }}</span>

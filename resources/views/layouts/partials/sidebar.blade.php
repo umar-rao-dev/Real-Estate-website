@@ -13,6 +13,9 @@
             <a href="{{ route('admin.properties.index') }}" class="list-group-item list-group-item-action bg-dark text-white border-secondary py-3 px-4">
                 <i class="bi bi-building me-2"></i> Properties
             </a>
+            <a href="{{ route('admin.orders.index') }}" class="list-group-item list-group-item-action bg-dark text-white border-secondary py-3 px-4">
+                <i class="bi bi-cart me-2"></i> Purchase Orders
+            </a>
             <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action bg-dark text-white border-secondary py-3 px-4">
                 <i class="bi bi-people me-2"></i> Users
             </a>
@@ -34,6 +37,9 @@
             </a>
             <a href="{{ route('agent.properties.index') }}" class="list-group-item list-group-item-action bg-dark text-white border-secondary py-3 px-4">
                 <i class="bi bi-building me-2"></i> My Properties
+            </a>
+            <a href="{{ route('agent.orders.index') }}" class="list-group-item list-group-item-action bg-dark text-white border-secondary py-3 px-4">
+                <i class="bi bi-cart me-2"></i> Purchase Orders
             </a>
             <a href="{{ route('agent.queries.index') }}" class="list-group-item list-group-item-action bg-dark text-white border-secondary py-3 px-4">
                 <i class="bi bi-envelope me-2"></i> Queries

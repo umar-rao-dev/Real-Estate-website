@@ -12,16 +12,14 @@ class HomeController extends Controller
     public function index()
     {
         $featuredProperties = Property::with(['images', 'category'])
-            ->where('is_approved', true)
             ->where('availability', 'available')
             ->latest()
             ->take(6)
             ->get();
 
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::all();
         
-        $announcements = Announcement::where('is_active', true)
-            ->latest()
+        $announcements = Announcement::latest()
             ->take(3)
             ->get();
 

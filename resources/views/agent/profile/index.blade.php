@@ -6,8 +6,8 @@
         <div class="col-md-4 mb-4">
             <div class="card border-0 shadow-sm text-center p-4">
                 <div class="mb-3">
-                    @if($user->profile_image)
-                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="rounded-circle shadow" style="width: 150px; height: 150px; object-fit: cover;">
+                    @if($user->photo)
+                        <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}" class="rounded-circle shadow" style="width: 150px; height: 150px; object-fit: cover;">
                     @else
                         <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto shadow" style="width: 150px; height: 150px;">
                             <i class="bi bi-person fs-1 text-success"></i>
@@ -15,66 +15,69 @@
                     @endif
                 </div>
                 <h4 class="mb-1">{{ $user->name }}</h4>
-                <div class="badge bg-success px-3 py-2 mb-3">Verified Agent</div>
-                <p class="text-muted small">Helping people find their dream homes since {{ $user->created_at->format('Y') }}.</p>
+                <p class="text-muted mb-3">Real Estate Agent</p>
+                <hr>
+                <div class="text-start px-3">
+                    <p class="mb-2"><strong>Email:</strong> {{ $user->email }}</p>
+                    <p class="mb-0"><strong>Agent Since:</strong> {{ $user->created_at->format('M Y') }}</p>
+                </div>
             </div>
         </div>
 
         <div class="col-md-8">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Agent Profile Settings</h5>
+                    <h5 class="mb-0 fw-bold text-success">Edit Agent Profile</h5>
                 </div>
                 <div class="card-body p-4">
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="alert alert-success border-0 shadow-sm mb-4">
                             {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
 
                     <form action="{{ route('agent.profile.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" name="name" value="{{ old('name', $user->name) }}" required>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" value="{{ old('email', $user->email) }}" required>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email Address</label>
+                                <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Profile Image</label>
-                                <input type="file" class="form-control" name="profile_image" accept="image/*">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Update Profile Photo</label>
+                                <input type="file" class="form-control" name="photo" accept="image/*">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Theme</label>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Theme</label>
                                 <select class="form-select" name="theme">
-                                    <option value="light" {{ $user->theme == 'light' ? 'selected' : '' }}>Light</option>
-                                    <option value="dark" {{ $user->theme == 'dark' ? 'selected' : '' }}>Dark</option>
+                                    <option value="light" {{ $user->theme == 'light' ? 'selected' : '' }}>Light Mode</option>
+                                    <option value="dark" {{ $user->theme == 'dark' ? 'selected' : '' }}>Dark Mode</option>
                                 </select>
                             </div>
                         </div>
 
                         <hr class="my-4">
-                        <h6 class="mb-3">Security</h6>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">New Password</label>
-                                <input type="password" class="form-control" name="password" placeholder="Leave blank to keep current">
+                        <h6 class="fw-bold mb-3">Account Security</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Change Password</label>
+                                <input type="password" class="form-control" name="password">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Confirm Password</label>
                                 <input type="password" class="form-control" name="password_confirmation">
                             </div>
                         </div>
 
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-success px-4">Update Profile</button>
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-success px-5 py-2 fw-bold">Update Profile</button>
                         </div>
                     </form>
                 </div>

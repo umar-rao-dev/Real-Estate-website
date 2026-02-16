@@ -12,7 +12,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $user = User::findOrFail(Auth::id());
+        $user = Auth::user();
         return view('user.profile.index', compact('user'));
     }
 
@@ -24,7 +24,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
-            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'theme' => 'required|in:light,dark',
         ]);
 
@@ -32,8 +32,8 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        if ($request->hasFile('profile_image')) {
-            $user->profile_image = $request->file('profile_image')->store('profiles', 'public');
+        if ($request->hasFile('photo')) {
+            $user->photo = $request->file('photo')->store('profiles', 'public');
         }
 
         $user->name  = $request->name;

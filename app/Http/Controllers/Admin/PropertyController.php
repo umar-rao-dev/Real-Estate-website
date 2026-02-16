@@ -26,7 +26,7 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
@@ -42,7 +42,7 @@ class PropertyController extends Controller
         $property = Property::create([
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
-            'title' => $request->title,
+            'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'beds' => $request->beds,
@@ -56,7 +56,6 @@ class PropertyController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('properties', 'public');
-
                 PropertyImage::create([
                     'property_id' => $property->id,
                     'image_path' => $path,
@@ -64,22 +63,20 @@ class PropertyController extends Controller
             }
         }
 
-        return redirect()->route('admin.properties.index')
-            ->with('success', 'Property created successfully');
+        return redirect()->route('admin.properties.index')->with('success', 'Property created successfully');
     }
 
     public function edit(Property $property)
     {
         $categories = Category::all();
         $property->load('images');
-
         return view('admin.properties.edit', compact('property', 'categories'));
     }
 
     public function update(Request $request, Property $property)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
@@ -93,15 +90,12 @@ class PropertyController extends Controller
 
         $property->update($request->all());
 
-        return redirect()->route('admin.properties.index')
-            ->with('success', 'Property updated successfully');
+        return redirect()->route('admin.properties.index')->with('success', 'Property updated successfully');
     }
 
     public function destroy(Property $property)
     {
         $property->delete();
-
-        return redirect()->route('admin.properties.index')
-            ->with('success', 'Property deleted successfully');
+        return redirect()->route('admin.properties.index')->with('success', 'Property deleted successfully');
     }
 }

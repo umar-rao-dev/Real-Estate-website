@@ -2,158 +2,111 @@
 
 @section('content')
 <div class="container-fluid">
-    <!-- Dashboard Hero Section -->
     <div class="dashboard-hero">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h2 class="fw-bold mb-2">Welcome Back, {{ auth()->user()->name }}!</h2>
-                <p class="lead mb-0 opacity-75">You have full control over the platform. Manage users, properties, and requests with ease.</p>
+                <h2 class="fw-bold mb-2">Admin Control Panel</h2>
+                <p class="lead mb-0 opacity-75">Overview of platform activities, properties, and purchase orders.</p>
             </div>
             <div class="col-md-4 text-md-end d-none d-md-block">
-                <div class="display-4 fw-bold mb-0">{{ $totalProperties }}</div>
-                <div class="text-uppercase small opacity-75">Active Listings</div>
+                <div class="display-4 fw-bold mb-0 text-white">{{ $totalProperties }}</div>
+                <div class="text-uppercase small opacity-75">Total Listings</div>
             </div>
         </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="row g-4 mb-4">
-        <!-- Total Users -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted text-uppercase mb-2">Total Users</h6>
-                            <h2 class="mb-0">{{ $totalUsers }}</h2>
-                        </div>
-                        <div class="bg-primary bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-people fs-1 text-primary"></i>
-                        </div>
-                    </div>
-                </div>
+    <div class="row g-4 mb-4 text-center">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h6 class="text-muted text-uppercase mb-2">Users</h6>
+                <h2 class="fw-bold text-primary">{{ $totalUsers }}</h2>
             </div>
         </div>
-
-        <!-- Total Agents -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted text-uppercase mb-2">Total Agents</h6>
-                            <h2 class="mb-0">{{ $totalAgents }}</h2>
-                        </div>
-                        <div class="bg-success bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-person-badge fs-1 text-success"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h6 class="text-muted text-uppercase mb-2">Agents</h6>
+                <h2 class="fw-bold text-success">{{ $totalAgents }}</h2>
             </div>
         </div>
-
-        <!-- Total Properties -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted text-uppercase mb-2">Total Properties</h6>
-                            <h2 class="mb-0">{{ $totalProperties }}</h2>
-                        </div>
-                        <div class="bg-info bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-building fs-1 text-info"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h6 class="text-muted text-uppercase mb-2">Properties</h6>
+                <h2 class="fw-bold text-info">{{ $totalProperties }}</h2>
             </div>
         </div>
-
-        <!-- Total Categories -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted text-uppercase mb-2">Categories</h6>
-                            <h2 class="mb-0">{{ \App\Models\Category::count() }}</h2>
-                        </div>
-                        <div class="bg-warning bg-opacity-10 p-3 rounded">
-                            <i class="bi bi-grid fs-1 text-warning"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h6 class="text-muted text-uppercase mb-2">Total Orders</h6>
+                <h2 class="fw-bold text-warning">{{ $totalOrders }}</h2>
             </div>
         </div>
     </div>
 
-    <!-- Latest Properties -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Latest Properties</h5>
-                        <a href="{{ route('admin.properties.index') }}" class="btn btn-sm btn-primary">
-                            View All <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
+                    <h5 class="fw-bold mb-0">Latest Properties</h5>
                 </div>
                 <div class="card-body p-0">
-                    @if($latestProperties->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Title</th>
-                                        <th>Category</th>
-                                        <th>Agent</th>
-                                        <th>Price</th>
-                                        <th>Type</th>
-                                        <th>Status</th>
-                                        <th>Created</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($latestProperties as $property)
-                                    <tr>
-                                        <td>{{ $property->id }}</td>
-                                        <td>
-                                            <strong>{{ $property->title }}</strong><br>
-                                            <small class="text-muted">
-                                                <i class="bi bi-geo-alt"></i> {{ $property->location }}
-                                            </small>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">{{ $property->category->name }}</span>
-                                        </td>
-                                        <td>{{ $property->user->name }}</td>
-                                        <td>
-                                            <strong class="text-success">${{ number_format($property->price, 2) }}</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge {{ $property->type == 'buy' ? 'bg-primary' : 'bg-info' }}">
-                                                {{ ucfirst($property->type) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge {{ $property->availability == 'available' ? 'bg-success' : 'bg-danger' }}">
-                                                {{ ucfirst($property->availability) }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $property->created_at->format('M d, Y') }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="bi bi-inbox fs-1 text-muted"></i>
-                            <p class="text-muted mt-2">No properties found</p>
-                        </div>
-                    @endif
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Price</th>
+                                    <th>Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($latestProperties as $property)
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-truncate" style="max-width: 200px;">{{ $property->name }}</div>
+                                        <small class="text-muted">{{ $property->location }}</small>
+                                    </td>
+                                    <td class="text-success fw-bold">${{ number_format($property->price) }}</td>
+                                    <td>{{ $property->user->name }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Buyer</th>
+                                    <th>Property</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($latestOrders as $order)
+                                <tr>
+                                    <td>{{ $order->buyer->name }}</td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 150px;">{{ $order->property->name }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="badge border {{ $order->status == 'pending' ? 'text-warning border-warning' : ($order->status == 'approved' ? 'text-success border-success' : 'text-danger border-danger') }}">
+                                            {{ ucfirst($order->status) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

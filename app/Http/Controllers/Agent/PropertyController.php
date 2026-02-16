@@ -13,11 +13,7 @@ class PropertyController extends Controller
 {
     public function index()
     {
-        $properties = Property::where('user_id', Auth::id())
-            ->with('category')
-            ->latest()
-            ->get();
-
+        $properties = Property::where('user_id', Auth::id())->with('category')->latest()->get();
         return view('agent.properties.index', compact('properties'));
     }
 
@@ -30,7 +26,7 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
@@ -39,14 +35,13 @@ class PropertyController extends Controller
             'area' => 'required|numeric',
             'location' => 'required|string',
             'type' => 'required|in:buy,rent',
-            'availability' => 'required|in:available,sold',
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $property = Property::create([
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
-            'title' => $request->title,
+            'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'beds' => $request->beds,
@@ -54,14 +49,12 @@ class PropertyController extends Controller
             'area' => $request->area,
             'location' => $request->location,
             'type' => $request->type,
-            'availability' => $request->availability,
-            'is_approved' => false, // Agents properties need admin approval
+            'availability' => 'available',
         ]);
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('properties', 'public');
-
                 PropertyImage::create([
                     'property_id' => $property->id,
                     'image_path' => $path,
@@ -69,26 +62,22 @@ class PropertyController extends Controller
             }
         }
 
-        return redirect()->route('agent.properties.index')
-            ->with('success', 'Property submitted and awaiting admin approval');
+        return redirect()->route('agent.properties.index')->with('success', 'Property listed successfully');
     }
 
     public function edit(Property $property)
     {
-        $this->authorizeProperty($property);
-
+        if ($property->user_id !== Auth::id()) abort(403);
         $categories = Category::all();
-        $property->load('images');
-
         return view('agent.properties.edit', compact('property', 'categories'));
     }
 
     public function update(Request $request, Property $property)
     {
-        $this->authorizeProperty($property);
+        if ($property->user_id !== Auth::id()) abort(403);
 
         $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
@@ -102,24 +91,13 @@ class PropertyController extends Controller
 
         $property->update($request->all());
 
-        return redirect()->route('agent.properties.index')
-            ->with('success', 'Property updated successfully');
+        return redirect()->route('agent.properties.index')->with('success', 'Property updated successfully');
     }
 
     public function destroy(Property $property)
     {
-        $this->authorizeProperty($property);
-
+        if ($property->user_id !== Auth::id()) abort(403);
         $property->delete();
-
-        return redirect()->route('agent.properties.index')
-            ->with('success', 'Property deleted successfully');
-    }
-
-    private function authorizeProperty(Property $property)
-    {
-        if ($property->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized access');
-        }
+        return redirect()->route('agent.properties.index')->with('success', 'Property deleted successfully');
     }
 }

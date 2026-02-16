@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'RealEstate') }} - Find Your Dream Home</title>
+    <title>{{ config('app.name', 'RealEstate') }}</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,37 +13,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .navbar {
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.9) !important;
-            transition: all 0.3s ease;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            color: #0d6efd !important;
-        }
-        .btn-primary {
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        .card {
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-        }
-        footer {
-            background-color: #212529;
-            color: #ced4da;
-        }
+        body { font-family: 'Outfit', sans-serif; background-color: #f8f9fa; }
+        .navbar { backdrop-filter: blur(10px); background-color: rgba(255, 255, 255, 0.9) !important; }
+        .navbar-brand { font-weight: 700; color: #0d6efd !important; }
+        .btn-primary { border-radius: 8px; font-weight: 500; }
+        footer { background-color: #212529; color: #ced4da; }
+        .hero-section { background: linear-gradient(135deg, #0d6efd 0%, #003d99 100%); color: white; padding: 100px 0; }
     </style>
     @yield('styles')
 </head>
@@ -52,7 +27,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <i class="bi bi-house-door-fill me-2"></i>
                 <span>RealEstate</span>
             </a>
@@ -62,10 +37,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('home') ? 'active fw-bold text-primary' : '' }}" href="{{ route('home') }}">Home</a>
+                        <a class="nav-link {{ request()->is('/') ? 'active fw-bold text-primary' : '' }}" href="{{ url('/') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('properties.*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('properties.index') }}">Properties</a>
+                        <a class="nav-link {{ request()->is('properties*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('properties.index') }}">Properties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('contact*') ? 'active fw-bold text-primary' : '' }}" href="{{ route('contact') }}">Contact Us</a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">
@@ -94,38 +72,16 @@
 
     <!-- Footer -->
     <footer class="py-5 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="text-white fw-bold mb-3">RealEstate</h5>
-                    <p>Connecting people with their dream homes since 2024. The most trusted platform for buying and renting properties.</p>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h6 class="text-white fw-bold mb-3">Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ route('home') }}" class="text-decoration-none text-muted">Home</a></li>
-                        <li><a href="{{ route('properties.index') }}" class="text-decoration-none text-muted">Properties</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h6 class="text-white fw-bold mb-3">Contact Us</h6>
-                    <ul class="list-unstyled text-muted">
-                        <li><i class="bi bi-geo-alt me-2"></i> 123 Real Estate Ave, NY</li>
-                        <li><i class="bi bi-envelope me-2"></i> info@realestate.com</li>
-                        <li><i class="bi bi-phone me-2"></i> +1 234 567 890</li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6 class="text-white fw-bold mb-3">Follow Us</h6>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-muted fs-4"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-muted fs-4"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="text-muted fs-4"><i class="bi bi-instagram"></i></a>
-                    </div>
-                </div>
+        <div class="container text-center">
+            <h5 class="text-white fw-bold mb-3">RealEstate</h5>
+            <p>Connecting people with their dream homes. The most trusted platform for buying and renting properties.</p>
+            <div class="d-flex justify-content-center gap-3 mb-4">
+                <a href="#" class="text-muted fs-4"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-muted fs-4"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="text-muted fs-4"><i class="bi bi-instagram"></i></a>
             </div>
             <hr class="my-4 border-secondary">
-            <div class="text-center text-muted small">
+            <div class="text-muted small">
                 © {{ date('Y') }} RealEstate. All rights reserved.
             </div>
         </div>
