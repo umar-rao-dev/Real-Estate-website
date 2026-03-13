@@ -16,6 +16,11 @@ class AdminDashboardController extends Controller
         $totalProperties = Property::count();
         $totalOrders = Order::count();
 
+        // Advanced Approval Stats
+        $pendingProperties = Property::where('status', 'pending')->count();
+        $approvedProperties = Property::where('status', 'approved')->count();
+        $rejectedProperties = Property::where('status', 'rejected')->count();
+
         $latestProperties = Property::with('user', 'category')
             ->latest()
             ->take(5)
@@ -31,6 +36,9 @@ class AdminDashboardController extends Controller
             'totalAgents',
             'totalProperties',
             'totalOrders',
+            'pendingProperties',
+            'approvedProperties',
+            'rejectedProperties',
             'latestProperties',
             'latestOrders'
         ));

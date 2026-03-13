@@ -1,116 +1,129 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-    <div class="dashboard-hero bg-success" style="background: linear-gradient(135deg, #198754 0%, #0c4d2d 100%);">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h2 class="fw-bold mb-2">Hello, Agent {{ auth()->user()->name }}!</h2>
-                <p class="lead mb-0 opacity-75">You have {{ $totalOrders }} open purchase orders for your properties.</p>
-            </div>
-            <div class="col-md-4 text-md-end d-none d-md-block">
-                <i class="bi bi-person-check-fill" style="font-size: 5rem; opacity: 0.2;"></i>
+<div class="row g-4 mb-4">
+    <div class="col-xl-4 col-md-6">
+        <div class="card p-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+            <div class="d-flex justify-content-between align-items-center text-white">
+                <div>
+                    <h6 class="opacity-75">My Total Listings</h6>
+                    <h2 class="fw-bold mb-0">{{ $totalProperties }}</h2>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                    <i class="bi bi-house-door fs-3"></i>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="row g-4 mb-4 text-center">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-4 h-100">
-                <h6 class="text-muted text-uppercase mb-2">My Listings</h6>
-                <h2 class="fw-bold text-primary">{{ $totalProperties }}</h2>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-4 h-100">
-                <h6 class="text-muted text-uppercase mb-2">Client Queries</h6>
-                <h2 class="fw-bold text-success">{{ $totalQueries }}</h2>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-4 h-100">
-                <h6 class="text-muted text-uppercase mb-2">Purchase Orders</h6>
-                <h2 class="fw-bold text-warning">{{ $totalOrders }}</h2>
+    <div class="col-xl-4 col-md-6">
+        <div class="card p-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+            <div class="d-flex justify-content-between align-items-center text-white">
+                <div>
+                    <h6 class="opacity-75">Client Queries</h6>
+                    <h2 class="fw-bold mb-0">{{ $totalQueries }}</h2>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                    <i class="bi bi-chat-dots fs-3"></i>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold mb-0">My Latest Properties</h5>
+    <div class="col-xl-4 col-md-6">
+        <div class="card p-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+            <div class="d-flex justify-content-between align-items-center text-white">
+                <div>
+                    <h6 class="opacity-75">Purchase Orders</h6>
+                    <h2 class="fw-bold mb-0">{{ $totalOrders }}</h2>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Property</th>
-                                    <th>Price</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($latestProperties as $property)
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">{{ $property->name }}</div>
-                                        <small class="text-muted text-truncate d-block" style="max-width: 150px;">{{ $property->location }}</small>
-                                    </td>
-                                    <td>${{ number_format($property->price) }}</td>
-                                    <td>
-                                        <span class="badge {{ $property->availability == 'available' ? 'bg-success' : 'bg-danger' }}">
-                                            {{ ucfirst($property->availability) }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="fw-bold mb-0">Latest Purchase Requests</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Buyer</th>
-                                    <th>Property</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($latestOrders as $order)
-                                <tr>
-                                    <td>{{ $order->buyer->name }}</td>
-                                    <td>
-                                        <div class="text-truncate" style="max-width: 150px;">{{ $order->property->name }}</div>
-                                    </td>
-                                    <td>
-                                        @if($order->status == 'pending')
-                                            <a href="{{ route('agent.orders.index') }}" class="btn btn-sm btn-outline-primary">Manage</a>
-                                        @else
-                                            <span class="badge border {{ $order->status == 'approved' ? 'text-success border-success' : 'text-danger border-danger' }}">
-                                                {{ ucfirst($order->status) }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                    <i class="bi bi-cart fs-3"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-lg-7 mb-4">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">My Recent Listings</h5>
+                <a href="{{ route('agent.properties.index') }}" class="btn btn-sm btn-outline-primary shadow-sm">Manage All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-light text-muted small">
+                        <tr>
+                            <th>Property</th>
+                            <th>Status</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($latestProperties as $p)
+                        <tr>
+                            <td>
+                                <div class="fw-bold">{{ $p->name }}</div>
+                                <div class="text-muted small">${{ number_format($p->price) }}</div>
+                            </td>
+                            <td>
+                                @if($p->status == 'approved')
+                                    <span class="badge bg-success-subtle text-success">Live</span>
+                                @elseif($p->status == 'pending')
+                                    <span class="badge bg-warning-subtle text-warning">Pending</span>
+                                @else
+                                    <span class="badge bg-danger-subtle text-danger">Rejected</span>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge {{ $p->availability == 'available' ? 'bg-info-subtle text-info' : 'bg-secondary-subtle text-secondary' }}">
+                                    {{ ucfirst($p->availability) }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="3" class="text-center py-4 text-muted">No listings yet.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-5 mb-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-4">Recent Buy Requests</h5>
+            @forelse($latestOrders as $o)
+            <div class="d-flex align-items-center mb-3 pb-3 border-bottom last-child-no-border">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-bold small">{{ $o->buyer->name }}</div>
+                    <div class="text-muted extra-small">Interested in: {{ $o->property->name }}</div>
+                </div>
+                <div>
+                     <span class="badge {{ $o->status == 'pending' ? 'bg-warning-subtle text-warning' : ($o->status == 'approved' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger') }} small">
+                        {{ ucfirst($o->status) }}
+                     </span>
+                </div>
+            </div>
+            @empty
+            <p class="text-muted text-center py-5">No requests received.</p>
+            @endforelse
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('styles')
+<style>
+    .bg-success-subtle { background-color: rgba(25, 135, 84, 0.1) !important; }
+    .bg-warning-subtle { background-color: rgba(255, 193, 7, 0.1) !important; }
+    .bg-danger-subtle { background-color: rgba(220, 53, 69, 0.1) !important; }
+    .bg-info-subtle { background-color: rgba(13, 202, 240, 0.1) !important; }
+    .bg-secondary-subtle { background-color: rgba(108, 117, 125, 0.1) !important; }
+    .last-child-no-border:last-child { border-bottom: none !important; }
+    .extra-small { font-size: 0.7rem; }
+</style>
 @endsection

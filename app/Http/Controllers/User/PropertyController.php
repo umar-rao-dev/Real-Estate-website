@@ -12,6 +12,7 @@ class PropertyController extends Controller
     public function index(Request $request)
     {
         $query = Property::with('images', 'category', 'user')
+            ->where('status', 'approved') // Only approved properties
             ->where('availability', 'available');
 
         if ($request->filled('keyword')) {
@@ -25,6 +26,10 @@ class PropertyController extends Controller
             $query->where('type', $request->type);
         }
 
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
         $properties = $query->latest()->paginate(9);
         $categories = Category::all();
 
@@ -34,6 +39,12 @@ class PropertyController extends Controller
     public function show($id)
     {
         $property = Property::with(['images', 'user', 'category'])->findOrFail($id);
+
+        // Security: Not approved properties cannot be viewed by regular users
+        if ($property->status !== 'approved' && (!auth()->check() || (auth()->user()->role !== 'admin' && auth()->user()->id !== $property->user_id))) {
+            abort(403, 'This property is not approved yet.');
+        }
+
         return view('user.properties.show', compact('property'));
     }
 }

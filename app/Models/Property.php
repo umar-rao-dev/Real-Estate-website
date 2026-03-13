@@ -21,6 +21,7 @@ class Property extends Model
         'location',
         'type',
         'availability',
+        'status',
     ];
 
     public function user() { return $this->belongsTo(User::class); }

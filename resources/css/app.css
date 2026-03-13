@@ -1,11 +1,113 @@
-@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+:root {
+    --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --secondary-gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --sidebar-bg: #0f172a;
+    --main-bg: #f8fafc;
+    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --premium-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--main-bg);
+    color: #1e293b;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+}
+
+/* Sidebar & Layout */
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 280px;
+    background: var(--sidebar-bg);
+    transition: var(--transition);
+    position: fixed;
+    z-index: 1000;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    margin-left: 280px;
+    transition: var(--transition);
+    min-height: 100vh;
+}
+
+@media (max-width: 992px) {
+    #sidebar-wrapper { margin-left: -280px; }
+    #sidebar-wrapper.toggled { margin-left: 0; }
+    #page-content-wrapper { margin-left: 0 !important; }
+}
+
+/* Navigation */
+.navbar-custom {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+/* Cards & Components */
+.card-premium {
+    border: none;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.card-premium:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--premium-shadow);
+}
+
+.btn-premium {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 700;
+    border-radius: 14px;
+    padding: 0.8rem 1.8rem;
+    transition: var(--transition);
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.3);
+    color: white;
+}
+
+/* Text & Utilities */
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.fw-800 { font-weight: 800; }
+.small-caps { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

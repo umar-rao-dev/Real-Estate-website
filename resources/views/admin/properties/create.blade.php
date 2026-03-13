@@ -1,159 +1,109 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Add New Property</h5>
-                </div>
-                <div class="card-body p-4">
-                    <form action="{{ route('admin.properties.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ route('admin.properties.index') }}" class="btn btn-light rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h3 class="fw-800 mb-0">List New Property</h3>
+        </div>
 
-                        <div class="row">
-                            <!-- Basic Info -->
-                            <div class="col-md-8 mb-4">
-                                <h6 class="text-primary mb-3">Basic Information</h6>
-                                <div class="mb-3">
-                                    <label for="title" class="form-label">Property Title</label>
-                                    <input type="text" class="form-control @error('title') is-invalid @enderror" 
-                                           id="title" name="title" value="{{ old('title') }}" required>
-                                    @error('title')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+        <div class="card border-0 shadow-sm p-4 pt-1">
+            <form action="{{ route('admin.properties.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" 
-                                              id="description" name="description" rows="6" required>{{ old('description') }}</textarea>
-                                    @error('description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                <div class="row g-4">
+                    <!-- General Details -->
+                    <div class="col-md-8">
+                        <div class="p-3 bg-light rounded-4 mb-4">
+                            <h6 class="fw-800 text-primary mb-3"><i class="bi bi-info-circle me-2"></i>Core Information</h6>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Property Display Name</label>
+                                <input type="text" name="name" class="form-control border-0 shadow-sm rounded-3 py-2" placeholder="e.g. Luxury Beachside Villa" required>
                             </div>
-
-                            <!-- Category & Pricing -->
-                            <div class="col-md-4 mb-4">
-                                <h6 class="text-primary mb-3">Category & Pricing</h6>
-                                <div class="mb-3">
-                                    <label for="category_id" class="form-label">Category</label>
-                                    <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
-                                        <option value="">Select Category</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="price" class="form-label">Price ($)</label>
-                                    <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" 
-                                           id="price" name="price" value="{{ old('price') }}" required>
-                                    @error('price')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="type" class="form-label">Type</label>
-                                    <select class="form-select @error('type') is-invalid @enderror" id="type" name="type" required>
-                                        <option value="buy" {{ old('type') == 'buy' ? 'selected' : '' }}>For Sale</option>
-                                        <option value="rent" {{ old('type') == 'rent' ? 'selected' : '' }}>For Rent</option>
-                                    </select>
-                                    @error('type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <!-- Details -->
-                            <div class="col-md-12 mb-4">
-                                <h6 class="text-primary mb-3">Property Details</h6>
-                                <div class="row">
-                                    <div class="col-md-3 mb-3">
-                                        <label for="beds" class="form-label">Bedrooms</label>
-                                        <input type="number" class="form-control @error('beds') is-invalid @enderror" 
-                                               id="beds" name="beds" value="{{ old('beds') }}" required>
-                                        @error('beds')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="baths" class="form-label">Bathrooms</label>
-                                        <input type="number" class="form-control @error('baths') is-invalid @enderror" 
-                                               id="baths" name="baths" value="{{ old('baths') }}" required>
-                                        @error('baths')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="area" class="form-label">Area (sqft)</label>
-                                        <input type="number" step="0.01" class="form-control @error('area') is-invalid @enderror" 
-                                               id="area" name="area" value="{{ old('area') }}" required>
-                                        @error('area')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="location" class="form-label">Location</label>
-                                        <input type="text" class="form-control @error('location') is-invalid @enderror" 
-                                               id="location" name="location" value="{{ old('location') }}" required>
-                                        @error('location')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <!-- Media & Status -->
-                            <div class="col-md-12 mb-4">
-                                <h6 class="text-primary mb-3">Media & Visibility</h6>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="images" class="form-label">Property Images (Select multiple)</label>
-                                        <input type="file" class="form-control @error('images') is-invalid @enderror" 
-                                               id="images" name="images[]" multiple accept="image/*">
-                                        @error('images')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="availability" class="form-label">Availability</label>
-                                        <select class="form-select @error('availability') is-invalid @enderror" id="availability" name="availability" required>
-                                            <option value="available" {{ old('availability') == 'available' ? 'selected' : '' }}>Available</option>
-                                            <option value="sold" {{ old('availability') == 'sold' ? 'selected' : '' }}>Sold/Rented</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 mb-3 d-flex align-items-end">
-                                        <div class="form-check mb-2">
-                                            <input type="checkbox" class="form-check-input" id="is_approved" name="is_approved" value="1" checked>
-                                            <label class="form-check-label" for="is_approved">Approve Immediately</label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Detailed Description</label>
+                                <textarea name="description" class="form-control border-0 shadow-sm rounded-3" rows="6" placeholder="Describe the architectural highlights, neighborhood, and unique features..." required></textarea>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <a href="{{ route('admin.properties.index') }}" class="btn btn-light me-2">Cancel</a>
-                            <button type="submit" class="btn btn-primary px-4">Create Property</button>
+                        <div class="p-3 bg-light rounded-4">
+                            <h6 class="fw-800 text-primary mb-3"><i class="bi bi-geo-alt me-2"></i>Spatial & Location</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Area (Sq Ft)</label>
+                                    <input type="number" name="area" class="form-control border-0 shadow-sm rounded-3 py-2" placeholder="2500" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Location / City</label>
+                                    <input type="text" name="location" class="form-control border-0 shadow-sm rounded-3 py-2" placeholder="Beverly Hills, CA" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Bedrooms</label>
+                                    <input type="number" name="beds" class="form-control border-0 shadow-sm rounded-3 py-2" placeholder="3" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Bathrooms</label>
+                                    <input type="number" name="baths" class="form-control border-0 shadow-sm rounded-3 py-2" placeholder="2" required>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Side Options -->
+                    <div class="col-md-4">
+                        <div class="p-3 bg-white border border-light rounded-4 mb-4 shadow-sm">
+                            <h6 class="fw-800 text-primary mb-3"><i class="bi bi-tag me-2"></i>Pricing & Type</h6>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Category</label>
+                                <select name="category_id" class="form-select border-0 bg-light rounded-3" required>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Asking Price ($)</label>
+                                <input type="number" name="price" class="form-control border-0 bg-light rounded-3 py-2" placeholder="450000" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Listing Type</label>
+                                <select name="type" class="form-select border-0 bg-light rounded-3" required>
+                                    <option value="buy">For Sale</option>
+                                    <option value="rent">For Rent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white border border-light rounded-4 shadow-sm">
+                            <h6 class="fw-800 text-primary mb-3"><i class="bi bi-images me-2"></i>Visual Media</h6>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Upload Photos</label>
+                                <input type="file" name="images[]" class="form-control border-0 bg-light rounded-3" multiple accept="image/*">
+                                <div class="extra-small text-muted mt-2">Hold Ctrl to select multiple high-quality images.</div>
+                            </div>
+                            <div class="form-check form-switch mt-4">
+                                <input class="form-check-input" type="checkbox" id="autoApprove" checked disabled>
+                                <label class="form-check-label small fw-bold" for="autoApprove">Admin Auto-Approval Enabled</label>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-gradient w-100 py-3 mb-3 shadow">Publish Property</button>
+                            <a href="{{ route('admin.properties.index') }}" class="btn btn-light w-100 py-2 rounded-3 text-muted">Discard Draft</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+    .extra-small { font-size: 0.7rem; }
+</style>
 @endsection
